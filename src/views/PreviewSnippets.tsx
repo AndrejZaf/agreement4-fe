@@ -3,15 +3,20 @@ import { useEffect, useState } from "react";
 import { ModifiedSnippet } from "./../types/ModifiedSnippet";
 import ContentEditable from "react-contenteditable";
 import { toSentenceCase } from "../utils/StringUtils";
+import { UpdatedSnippetsDTO } from "./../types/UpdatedSnippetsDTO";
+import axios from "axios";
 
 type PreviewSnippetsProps = {};
 
 export default function PreviewSnippets({}: PreviewSnippetsProps) {
   const location = useLocation();
   const [modifiedSnippets, setModifiedSnippets] = useState<ModifiedSnippet[]>();
+  const [selectedDoc, setSelectedDoc] = useState<File>();
   useEffect(() => {
-    const data = location.state?.data;
-    setModifiedSnippets(data);
+    const snippets = location.state?.data.snippets;
+    const file = location.state?.data.uploadedFile;
+    setModifiedSnippets(snippets);
+    setSelectedDoc(file);
   }, [location.state.data]);
 
   const handleInput = (
@@ -25,7 +30,33 @@ export default function PreviewSnippets({}: PreviewSnippetsProps) {
     setModifiedSnippets(modifiedSnippets);
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    const updatedSnippets: UpdatedSnippetsDTO[] = modifiedSnippets!.map(
+      ({ id, positions }) => ({ id, positions })
+    );
+    const data = { updatedSnippets };
+    let formData = new FormData();
+    formData.append("file", selectedDoc!);
+    formData.append("updatedSnippets", JSON.stringify(data));
+    axios
+      .post("http://localhost:8080/api/file/process", formData, {
+        responseType: "blob",
+      })
+      .then((response) => {
+        const file: Blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+        const fileUrl: string = URL.createObjectURL(file);
+        const excelDownloadLink: HTMLAnchorElement =
+          document.createElement("a");
+        excelDownloadLink.style.display = "none";
+        excelDownloadLink.href = fileUrl;
+        excelDownloadLink.download = selectedDoc!.name;
+        document.body.appendChild(excelDownloadLink);
+        excelDownloadLink.click();
+      })
+      .catch((err: any) => console.log(err));
+  };
 
   const wrapTags = (modSnippet: ModifiedSnippet) => {
     const regex = /(\s|\[[^\]]*\])/g;

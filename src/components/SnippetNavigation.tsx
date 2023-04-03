@@ -7,6 +7,7 @@ type SnippetNavigationProps = {
   snippetIndex: number;
   modifiedSnippets: ModifiedSnippet[];
   poppedSnippets: ModifiedSnippet[];
+  selectedDoc: File | undefined;
 };
 
 export default function SnippetNavigation({
@@ -15,7 +16,9 @@ export default function SnippetNavigation({
   snippetIndex,
   modifiedSnippets,
   poppedSnippets,
+  selectedDoc,
 }: SnippetNavigationProps) {
+  console.log(snippetIndex, modifiedSnippets);
   return (
     <div className="snippet-nav-buttons mt-8 flex justify-between">
       <button
@@ -38,10 +41,16 @@ export default function SnippetNavigation({
         Back
       </button>
       {/* <PlaceholderTracker modifiedSnippets={modifiedSnippets} /> */}
-      {snippetIndex === modifiedSnippets.length ? (
+      {snippetIndex === modifiedSnippets.length ||
+      modifiedSnippets.length === 1 ? (
         <Link
           to="/preview"
-          state={{ data: poppedSnippets.concat(modifiedSnippets) }}
+          state={{
+            data: {
+              snippets: poppedSnippets.concat(modifiedSnippets),
+              uploadedFile: selectedDoc,
+            },
+          }}
           className="btn gap-2">
           Preview
           <svg

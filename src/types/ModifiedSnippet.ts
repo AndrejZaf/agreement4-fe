@@ -1,4 +1,5 @@
 export interface ModifiedSnippet {
+  id: number;
   snippet: string;
   positions: PlaceholderLocation[];
 }

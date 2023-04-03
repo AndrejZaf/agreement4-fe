@@ -9,6 +9,7 @@ import { insertAtIndex } from "../utils/StringUtils";
 import UploadFile from "../components/UploadFile";
 import SnippetNavigation from "../components/SnippetNavigation";
 import SnippetContainer from "../components/SnippetContainer";
+import { SnippetDTO } from "../types/SnippetDTO";
 const UploadFileSchema = yup.object({
   file: yup.mixed().required("File is required"),
 });
@@ -44,13 +45,16 @@ export default function Home() {
       .catch((err: any) => console.log(err));
   };
 
-  const prepareSnippets = (snippets: string[]) => {
+  const prepareSnippets = (snippets: SnippetDTO[]) => {
     const modSnipps: ModifiedSnippet[] = [];
-    snippets.forEach((snipp) => {
+    snippets.forEach((snippetDTO: SnippetDTO) => {
       const regex = /\[[^\]]*\]/g;
-      const matches: RegExpMatchArray[] = [...snipp.matchAll(regex)];
+      const matches: RegExpMatchArray[] = [
+        ...snippetDTO.snippet.matchAll(regex),
+      ];
       let modifiedSnippet: ModifiedSnippet = {
-        snippet: snipp,
+        id: snippetDTO.id,
+        snippet: snippetDTO.snippet,
         positions: [],
       };
       // matches.reverse().forEach((match) => {
@@ -65,13 +69,13 @@ export default function Home() {
           oldEndPosition: endPosition,
           oldPlaceholder: placeholderText,
         });
-        snipp = insertAtIndex(
-          snipp,
+        snippetDTO.snippet = insertAtIndex(
+          snippetDTO.snippet,
           placeholderText,
           startPosition!,
           endPosition
         );
-        modifiedSnippet.snippet = snipp;
+        modifiedSnippet.snippet = snippetDTO.snippet;
       });
       modSnipps.push(modifiedSnippet);
     });
@@ -104,6 +108,7 @@ export default function Home() {
               setModifiedSnippets={setModifiedSnippets}
             />
             <SnippetNavigation
+              selectedDoc={selectedDoc}
               poppedSnippets={poppedSnippets}
               modifiedSnippets={modifiedSnippets}
               snippetIndex={snippetIndex}

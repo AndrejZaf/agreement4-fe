@@ -104,6 +104,7 @@ export default function Home() {
               setModifiedSnippets={setModifiedSnippets}
             />
             <SnippetNavigation
+              poppedSnippets={poppedSnippets}
               modifiedSnippets={modifiedSnippets}
               snippetIndex={snippetIndex}
               onClickBack={onClickBack}

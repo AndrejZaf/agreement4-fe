@@ -1,4 +1,4 @@
-import PlaceholderTracker from "./PlaceholderTracker";
+import { Link } from "react-router-dom";
 import { ModifiedSnippet } from "./../types/ModifiedSnippet";
 
 type SnippetNavigationProps = {
@@ -6,6 +6,7 @@ type SnippetNavigationProps = {
   onClickBack(): void;
   snippetIndex: number;
   modifiedSnippets: ModifiedSnippet[];
+  poppedSnippets: ModifiedSnippet[];
 };
 
 export default function SnippetNavigation({
@@ -13,6 +14,7 @@ export default function SnippetNavigation({
   onClickNext,
   snippetIndex,
   modifiedSnippets,
+  poppedSnippets,
 }: SnippetNavigationProps) {
   return (
     <div className="snippet-nav-buttons mt-8 flex justify-between">
@@ -36,25 +38,47 @@ export default function SnippetNavigation({
         Back
       </button>
       {/* <PlaceholderTracker modifiedSnippets={modifiedSnippets} /> */}
-      <button
-        className="btn gap-2"
-        onClick={onClickNext}
-        disabled={snippetIndex === modifiedSnippets.length}>
-        Next
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M8.25 4.5l7.5 7.5-7.5 7.5"
-          />
-        </svg>
-      </button>
+      {snippetIndex === modifiedSnippets.length ? (
+        <Link
+          to="/preview"
+          state={{ data: poppedSnippets.concat(modifiedSnippets) }}
+          className="btn gap-2">
+          Preview
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </Link>
+      ) : (
+        <button
+          className="btn gap-2"
+          onClick={onClickNext}
+          disabled={snippetIndex === modifiedSnippets.length}>
+          Next
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </button>
+      )}
     </div>
   );
 }

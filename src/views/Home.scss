@@ -1,0 +1,14 @@
+.body {
+  background-color: #e9e3e7;
+}
+.rendered-doc {
+  background-color: white;
+  margin: 0 auto;
+  padding: 2em 7em;
+  width: 50%;
+  border: 1px solid rgb(179, 179, 179);
+  p:hover {
+    background-color: rgb(166, 187, 211);
+    cursor: pointer;
+  }
+}

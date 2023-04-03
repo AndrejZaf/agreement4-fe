@@ -38,7 +38,6 @@ export default function SnippetContainer({
             data-tip={tooltipMessage}
             key={index}
             html={newPlaceholder ?? str}
-            data-compo
             onChange={(el) => handleInput(el, changedIndex)}
           />
         );

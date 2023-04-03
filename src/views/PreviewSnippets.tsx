@@ -45,8 +45,7 @@ export default function PreviewSnippets({}: PreviewSnippetsProps) {
             data-tip={tooltipMessage}
             key={index}
             html={newPlaceholder ?? str}
-            data-compo
-            onChange={(el) => handleInput(el, keyIndex, modSnippet)}
+            onChange={(el) => handleInput(el, changedIndex, modSnippet)}
           />
         );
       }

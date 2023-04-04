@@ -57,12 +57,10 @@ export default function Home() {
         snippet: snippetDTO.snippet,
         positions: [],
       };
-      // matches.reverse().forEach((match) => {
+
       matches.forEach((match) => {
         const startPosition = match.index;
         const endPosition = match.index! + match[0].length;
-        // Find an alternative solution to this problem
-        // const placeholderText = `<span id="placeholder" data-start=${startPosition} data-end=${endPosition}>${match[0]}</span>`;
         const placeholderText = match[0];
         modifiedSnippet.positions.push({
           oldStartPosition: startPosition!,
